@@ -30,16 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Video Player elements
   const bdayVideo = document.getElementById('birthday-video');
   const customPlayer = document.getElementById('custom-player');
-  const btnPlayPause = document.getElementById('btn-play-pause');
-  const btnMute = document.getElementById('btn-mute');
-  const btnFullscreen = document.getElementById('btn-fullscreen');
-  const btnLoop = document.getElementById('btn-loop');
-  const volumeSlider = document.getElementById('volume-slider');
-  const progressContainer = document.getElementById('progress-container');
-  const progressFill = document.getElementById('progress-fill');
-  const bufferedBar = document.getElementById('buffered-bar');
-  const timeDisplay = document.getElementById('time-display');
-  const playerOverlay = document.getElementById('player-overlay');
 
   // Global App State
   let difficulty = parseInt(difficultySelect.value); // cols & rows (3x3, 4x4, 5x5)
@@ -659,18 +649,15 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
 
-  // --- CUSTOM VIDEO PLAYER LOGIC ---
+  // --- VIDEO PLAYER LOGIC ---
 
   function playBirthdayVideo() {
     bdayVideo.play();
-    btnPlayPause.innerHTML = '<i class="fa-solid fa-pause"></i>';
-    playerOverlay.classList.add('hidden');
     startConfettiCelebration(); // Confetti on playing video!
     
     // Slow down confetti after 6 seconds to not block video view
     setTimeout(() => {
       if (bdayVideo.paused === false) {
-        // fade out particles by not generating anymore
         confettiParticles = confettiParticles.slice(0, 30);
       }
     }, 6000);
@@ -678,134 +665,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function pauseBirthdayVideo() {
     bdayVideo.pause();
-    btnPlayPause.innerHTML = '<i class="fa-solid fa-play"></i>';
-    playerOverlay.classList.remove('hidden');
     stopConfettiCelebration();
   }
 
-  function togglePlay() {
-    if (bdayVideo.paused) {
-      playBirthdayVideo();
-    } else {
-      pauseBirthdayVideo();
-    }
-  }
-
-  // Play/Pause Trigger
-  btnPlayPause.addEventListener('click', togglePlay);
-  playerOverlay.addEventListener('click', playBirthdayVideo);
-  bdayVideo.addEventListener('click', togglePlay);
-
-  // Mute / Unmute
-  btnMute.addEventListener('click', () => {
-    bdayVideo.muted = !bdayVideo.muted;
-    if (bdayVideo.muted) {
-      btnMute.innerHTML = '<i class="fa-solid fa-volume-xmark"></i>';
-      volumeSlider.value = 0;
-    } else {
-      btnMute.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
-      volumeSlider.value = bdayVideo.volume;
-    }
-  });
-
-  // Volume slider change
-  volumeSlider.addEventListener('input', (e) => {
-    const val = parseFloat(e.target.value);
-    bdayVideo.volume = val;
-    bdayVideo.muted = val === 0;
-    
-    if (val === 0) {
-      btnMute.innerHTML = '<i class="fa-solid fa-volume-xmark"></i>';
-    } else if (val < 0.5) {
-      btnMute.innerHTML = '<i class="fa-solid fa-volume-low"></i>';
-    } else {
-      btnMute.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
-    }
-  });
-
-  // Loop Toggle
-  btnLoop.addEventListener('click', () => {
-    bdayVideo.loop = !bdayVideo.loop;
-    btnLoop.classList.toggle('active', bdayVideo.loop);
-  });
-
-  // Time Updates & Progress Slider
-  bdayVideo.addEventListener('timeupdate', () => {
-    const curTime = bdayVideo.currentTime;
-    const duration = bdayVideo.duration || 0;
-    
-    // Seek progress fill
-    const pct = (curTime / duration) * 100;
-    progressFill.style.width = `${pct}%`;
-    document.getElementById('progress-handle').style.left = `${pct}%`;
-
-    // Display string formatted time
-    timeDisplay.textContent = `${formatTime(curTime)} / ${formatTime(duration)}`;
-  });
-
-  // Buffered slider
-  bdayVideo.addEventListener('progress', () => {
-    if (bdayVideo.buffered.length > 0 && bdayVideo.duration) {
-      const bufferedEnd = bdayVideo.buffered.end(bdayVideo.buffered.length - 1);
-      const pct = (bufferedEnd / bdayVideo.duration) * 100;
-      bufferedBar.style.width = `${pct}%`;
-    }
-  });
-
-  // Format seconds to mm:ss
-  function formatTime(sec) {
-    const m = Math.floor(sec / 60).toString().padStart(2, '0');
-    const s = Math.floor(sec % 60).toString().padStart(2, '0');
-    return `${m}:${s}`;
-  }
-
-  // Seeking on progress-bar click/drag
-  function seek(e) {
-    const rect = progressContainer.getBoundingClientRect();
-    const pos = (e.clientX - rect.left) / rect.width;
-    const duration = bdayVideo.duration || 0;
-    bdayVideo.currentTime = Math.min(Math.max(0, pos), 1) * duration;
-  }
-
-  let isSeeking = false;
-  progressContainer.addEventListener('mousedown', (e) => {
-    isSeeking = true;
-    seek(e);
-  });
-  
-  window.addEventListener('mousemove', (e) => {
-    if (isSeeking) seek(e);
-  });
-
-  window.addEventListener('mouseup', () => {
-    isSeeking = false;
-  });
-
-  // Fullscreen support
-  btnFullscreen.addEventListener('click', () => {
-    if (!document.fullscreenElement) {
-      if (customPlayer.requestFullscreen) {
-        customPlayer.requestFullscreen();
-      } else if (customPlayer.webkitRequestFullscreen) { /* Safari */
-        customPlayer.webkitRequestFullscreen();
-      } else if (customPlayer.msRequestFullscreen) { /* IE11 */
-        customPlayer.msRequestFullscreen();
+  // Toggle play/pause by clicking on the video (only when solved)
+  bdayVideo.addEventListener('click', () => {
+    if (document.getElementById('game-card').classList.contains('game-solved')) {
+      if (bdayVideo.paused) {
+        playBirthdayVideo();
+      } else {
+        pauseBirthdayVideo();
       }
-      btnFullscreen.innerHTML = '<i class="fa-solid fa-compress"></i>';
-    } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if (document.webkitExitFullscreen) {
-        document.webkitExitFullscreen();
-      }
-      btnFullscreen.innerHTML = '<i class="fa-solid fa-expand"></i>';
-    }
-  });
-
-  // Sync fullscreen icon back if exited using ESC
-  document.addEventListener('fullscreenchange', () => {
-    if (!document.fullscreenElement) {
-      btnFullscreen.innerHTML = '<i class="fa-solid fa-expand"></i>';
     }
   });
 });

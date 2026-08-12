@@ -494,7 +494,7 @@ body {
 .custom-player video {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   display: block;
 }
 
@@ -646,219 +646,63 @@ body {
   pointer-events: none;
 }
 
+/* Fade out header, controls and footer but preserve space to prevent layout shifting */
 #game-card.game-solved .puzzle-header,
 #game-card.game-solved #puzzle-controls,
 #game-card.game-solved #puzzle-footer {
   opacity: 0;
   pointer-events: none;
-  max-height: 0;
-  margin: 0;
-  padding: 0;
-  border: none;
-  overflow: hidden;
+  transition: opacity 0.8s ease;
 }
 
+/* Maintain exact player size and align style with pink celebration theme */
 #game-card.game-solved .custom-player {
-  max-width: 800px; /* Expand slightly for better viewing experience */
-  border-color: rgba(236, 72, 153, 0.2);
-  box-shadow: 0 20px 50px rgba(236, 72, 153, 0.2);
+  border-color: rgba(236, 72, 153, 0.3);
+  box-shadow: 0 20px 50px rgba(236, 72, 153, 0.3);
 }
 
-/* Player Controls Overlay */
-.player-controls {
+/* Glassmorphic solved-replay floating action button */
+.replay-btn-solved {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: linear-gradient(to top, rgba(3, 3, 9, 0.98) 0%, rgba(3, 3, 9, 0.7) 60%, transparent 100%);
-  padding: 20px 15px 10px 15px;
+  bottom: 20px;
+  right: 20px;
+  z-index: 10;
+  background: rgba(15, 10, 32, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: var(--font-main);
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   opacity: 0;
   pointer-events: none;
   transform: translateY(10px);
-  transition: opacity 0.3s, transform 0.3s;
-  z-index: 5;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-/* Only show controls when game is solved and player is hovered */
-#game-card.game-solved .custom-player:hover .player-controls,
-#game-card.game-solved .custom-player:active .player-controls {
+#game-card.game-solved .replay-btn-solved {
   opacity: 1;
   pointer-events: auto;
   transform: translateY(0);
 }
 
-/* Seek Bar / Progress Bar */
-.progress-container {
-  position: relative;
-  width: 100%;
-  height: 6px;
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 3px;
-  margin-bottom: 12px;
-  cursor: pointer;
-}
-
-.progress-bar-bg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 3px;
-}
-
-.buffered-bar {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.25);
-  border-radius: 3px;
-  width: 0;
-}
-
-.progress-bar-fill {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  background: linear-gradient(90deg, var(--accent-color), var(--teal-accent));
-  border-radius: 3px;
-  width: 0;
-}
-
-.progress-handle {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  transform: translate(-50%, -50%) scale(0);
-  width: 14px;
-  height: 14px;
-  background: #fff;
-  border-radius: 50%;
-  box-shadow: 0 0 10px var(--accent-color);
-  transition: transform 0.15s;
-}
-
-.progress-container:hover .progress-handle {
-  transform: translate(-50%, -50%) scale(1);
-}
-
-/* Row of Buttons */
-.controls-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.control-left, .control-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.player-btn {
-  background: none;
-  border: none;
-  color: var(--text-light);
-  font-size: 1.1rem;
-  cursor: pointer;
-  padding: 6px;
-  border-radius: 6px;
-  transition: color 0.2s, transform 0.15s;
-}
-
-.player-btn:hover {
-  color: var(--accent-color);
-  transform: scale(1.1);
-}
-
-.time-display {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  font-weight: 500;
-  margin-left: 6px;
-}
-
-/* Volume Slider */
-.volume-slider-container {
-  display: flex;
-  align-items: center;
-  width: 0;
-  overflow: hidden;
-  transition: width 0.3s ease;
-}
-
-.control-left:hover .volume-slider-container,
-.volume-slider-container:hover {
-  width: 70px;
-}
-
-#volume-slider {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 100%;
-  height: 4px;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 2px;
-  outline: none;
-}
-
-#volume-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
+.replay-btn-solved:hover {
   background: var(--accent-color);
-  cursor: pointer;
-  box-shadow: 0 0 5px var(--accent-color);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 20px rgba(236, 72, 153, 0.4);
+  transform: translateY(-2px);
 }
 
-/* Loop button active state */
-.player-btn.active {
-  color: var(--teal-accent);
-  text-shadow: 0 0 8px rgba(6, 182, 212, 0.6);
-}
-
-/* Play Screen Overlay Trigger */
-.player-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.4);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 4;
-  cursor: pointer;
-  transition: opacity 0.3s;
-}
-
-.player-overlay.hidden {
-  opacity: 0;
-  pointer-events: none;
-}
-
-.play-trigger-btn {
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  background: rgba(236, 72, 153, 0.85);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.8rem;
-  color: #fff;
-  box-shadow: 0 0 25px rgba(236, 72, 153, 0.6);
-  transition: transform 0.3s, background-color 0.3s;
-}
-
-.play-trigger-btn:hover {
-  transform: scale(1.1);
-  background-color: var(--accent-color);
+.replay-btn-solved:active {
+  transform: translateY(1px);
 }
 
 /* Confetti Overlay Canvas */
