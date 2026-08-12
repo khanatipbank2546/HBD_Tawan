@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Screen elements
   const screenIntro = document.getElementById('screen-intro');
   const screenPuzzle = document.getElementById('screen-puzzle');
-  const screenVideo = document.getElementById('screen-video');
 
   // Buttons & Controls
   const btnStart = document.getElementById('btn-start');
@@ -561,20 +560,20 @@ document.addEventListener('DOMContentLoaded', () => {
     playSound('success');
     startConfettiCelebration();
 
+    // Reset video to start
+    bdayVideo.currentTime = 0;
+
     // Highlights winning state on board
     puzzlePieces.forEach(p => {
       p.element.style.borderColor = 'var(--gold-accent)';
       p.element.style.boxShadow = '0 0 15px rgba(245, 158, 11, 0.4)';
     });
 
-    // Auto-transition to video screen after 1.5 seconds celebration
+    // Seamlessly transition to the video player
     setTimeout(() => {
-      stopConfettiCelebration();
-      transitionToScreen(screenVideo);
-      
-      // Auto-start video
+      document.getElementById('game-card').classList.add('game-solved');
       playBirthdayVideo();
-    }, 1800);
+    }, 1500);
   }
 
   // --- Timer ---
@@ -613,8 +612,8 @@ document.addEventListener('DOMContentLoaded', () => {
       targetScreen.classList.add('active');
     }, 50);
 
-    // Pause video if moving away from video screen
-    if (targetScreen !== screenVideo) {
+    // Pause video if moving away from game/puzzle screen
+    if (targetScreen !== screenPuzzle) {
       pauseBirthdayVideo();
     }
   }
@@ -650,7 +649,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   btnReplayPuzzle.addEventListener('click', () => {
     playSound('click');
-    transitionToScreen(screenPuzzle);
+    document.getElementById('game-card').classList.remove('game-solved');
+    pauseBirthdayVideo();
     initPuzzle();
   });
 
