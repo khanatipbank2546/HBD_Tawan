@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday Tawan! 🎉</title>
+  <!-- Google Fonts: Outfit for body, Dancing Script for warm handwritten birthday feel -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Outfit:wght@300;400;600;800&family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Floating Background Elements -->
+  <div class="background-glow"></div>
+  <div class="floating-container" id="floating-container"></div>
+
+  <!-- Main Container -->
+  <main class="app-container">
+
+    <!-- Screen 1: Welcome & Birthday Intro -->
+    <section id="screen-intro" class="screen active">
+      <div class="glass-card welcome-card">
+        <div class="birthday-crown">👑</div>
+        <h1 class="gradient-text hbd-title">Happy Birthday</h1>
+        <h2 class="name-title">TAWAN</h2>
+        <p class="intro-text">
+          ยินดีต้อนรับสู่กล่องของขวัญดิจิทัลสุดพิเศษ! 🎁<br>
+          มีบางอย่างที่เตรียมไว้ให้เธออยู่ในนี้... แต่ก่อนอื่น เธอต้องไขปริศนาจิ๊กซอว์ภาพความทรงจำนี้เพื่อปลดล็อกมันนะ! 🧩✨
+        </p>
+
+        <div class="action-box">
+          <button id="btn-start" class="btn btn-primary btn-glow">
+            <span>เริ่มภารกิจถอดรหัส</span>
+            <i class="fa-solid fa-key"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Screen 2: Jigsaw Puzzle Screen -->
+    <section id="screen-puzzle" class="screen">
+      <div class="glass-card puzzle-card">
+        <header class="puzzle-header">
+          <button id="btn-back-to-intro" class="btn btn-icon" title="กลับหน้าแรก">
+            <i class="fa-solid fa-arrow-left"></i>
+          </button>
+          <div class="puzzle-title-area">
+            <h2 class="section-title">ต่อจิ๊กซอว์เพื่อเปิดกล่องความทรงจำ 🔐</h2>
+            <p class="subtitle">สลับชิ้นส่วนภาพให้ถูกต้องเพื่อเปิดวิดีโอวันเกิด</p>
+          </div>
+          <div style="width: 40px;"></div> <!-- Spacer for symmetry -->
+        </header>
+
+        <!-- Controls Row -->
+        <div class="puzzle-controls">
+          <div class="control-group">
+            <label for="difficulty-select">ความยาก:</label>
+            <select id="difficulty-select" class="custom-select">
+              <option value="3">ง่าย (3x3)</option>
+              <option value="4" selected>ปานกลาง (4x4)</option>
+              <option value="5">ท้าทาย (5x5)</option>
+            </select>
+          </div>
+
+          <div class="stats-group">
+            <div class="stat-item">
+              <i class="fa-regular fa-clock"></i>
+              <span id="puzzle-timer">00:00</span>
+            </div>
+            <div class="stat-item">
+              <i class="fa-solid fa-arrows-rotate"></i>
+              <span id="puzzle-moves">0 ครั้ง</span>
+            </div>
+          </div>
+
+          <div class="action-group">
+            <button id="btn-preview" class="btn btn-secondary" title="ดูตัวอย่างภาพจริง">
+              <i class="fa-regular fa-eye"></i> <span>ดูภาพตัวอย่าง</span>
+            </button>
+            <button id="btn-reset" class="btn btn-secondary" title="สับเปลี่ยนใหม่">
+              <i class="fa-solid fa-shuffle"></i> <span>รีเซ็ต</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Puzzle Main Board -->
+        <div class="puzzle-board-wrapper">
+          <div id="puzzle-board" class="puzzle-board">
+            <!-- Puzzle pieces will be generated here by JS -->
+          </div>
+          
+          <!-- Solution Preview Overlay -->
+          <div id="preview-overlay" class="preview-overlay">
+            <div class="preview-content">
+              <h3>ภาพตัวอย่าง</h3>
+              <div class="preview-image-wrapper">
+                <canvas id="preview-canvas"></canvas>
+              </div>
+              <button id="btn-close-preview" class="btn btn-primary">ตกลง</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="puzzle-footer">
+          <p><i class="fa-solid fa-circle-info"></i> ลากชิ้นส่วนสลับที่กัน หรือคลิกเลือก 2 ชิ้นเพื่อสลับตำแหน่ง</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Screen 3: Video Player & Greeting Cards -->
+    <section id="screen-video" class="screen">
+      <div class="video-layout">
+        <!-- Left panel: Video Player -->
+        <div class="video-container-wrapper">
+          <div class="glass-card video-card">
+            <!-- Custom Video Player -->
+            <div class="custom-player" id="custom-player">
+              <video id="birthday-video" src="tawan.mp4" playsinline></video>
+              
+              <!-- Video controls overlay -->
+              <div class="player-controls">
+                <div class="progress-container" id="progress-container">
+                  <div class="progress-bar-bg"></div>
+                  <div class="progress-bar-buffered" id="buffered-bar"></div>
+                  <div class="progress-bar-fill" id="progress-fill"></div>
+                  <div class="progress-handle" id="progress-handle"></div>
+                </div>
+
+                <div class="controls-row">
+                  <div class="control-left">
+                    <button class="player-btn" id="btn-play-pause" title="เล่น / หยุด">
+                      <i class="fa-solid fa-play"></i>
+                    </button>
+                    <button class="player-btn" id="btn-mute" title="ปิดเสียง">
+                      <i class="fa-solid fa-volume-high"></i>
+                    </button>
+                    <div class="volume-slider-container">
+                      <input type="range" id="volume-slider" min="0" max="1" step="0.05" value="0.8">
+                    </div>
+                    <span class="time-display" id="time-display">00:00 / 00:00</span>
+                  </div>
+                  
+                  <div class="control-right">
+                    <button class="player-btn" id="btn-loop" title="เล่นวนซ้ำ">
+                      <i class="fa-solid fa-repeat"></i>
+                    </button>
+                    <button class="player-btn" id="btn-fullscreen" title="เต็มจอ">
+                      <i class="fa-solid fa-expand"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Play overlay trigger -->
+              <div class="player-overlay" id="player-overlay">
+                <div class="play-trigger-btn">
+                  <i class="fa-solid fa-play"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right panel: Elegant Birthday Greetings -->
+        <div class="greeting-container">
+          <div class="glass-card greeting-card">
+            <span class="card-badge">✨ Birthday Wish ✨</span>
+            <h2 class="greeting-heading font-dancing">Dear Tawan,</h2>
+            <div class="greeting-body">
+              <p>สุขสันต์วันเกิดนะเพื่อนรัก! 🎂🎉</p>
+              <p>ขอให้วันเกิดปีนี้พัดพาความสุข ความโชคดี และรอยยิ้มเข้ามาในชีวิตเธอในทุกๆ วัน ขอให้ประสบความสำเร็จในทุกเป้าหมายที่ตั้งใจไว้ สุขภาพแข็งแรง มีเพื่อนที่ดีและคนรักที่ดีล้อมรอบตัว</p>
+              <p>ยินดีมากๆ ที่ได้เป็นเพื่อนกันและได้แชร์ช่วงเวลาดีๆ ร่วมกันเสมอมา ขอให้ก้าวเดินไปข้างหน้าอย่างมั่นใจและมีความสุขที่สุดนะ!</p>
+              <p class="signature font-dancing">- With Love & Best Wishes ❤️</p>
+            </div>
+            
+            <div class="greeting-actions">
+              <button id="btn-replay-puzzle" class="btn btn-secondary">
+                <i class="fa-solid fa-gamepad"></i> <span>เล่นเกมอีกครั้ง</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Celebration Confetti Canvas overlay -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Hidden video helper to capture frames and load metadata -->
+  <video id="hidden-video" src="tawan.mp4" style="display: none;" muted crossorigin="anonymous"></video>
+
+  <!-- App logic script -->
+  <script src="app.js"></script>
+</body>
+</html>
