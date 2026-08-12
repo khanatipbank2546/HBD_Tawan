@@ -550,8 +550,9 @@ document.addEventListener('DOMContentLoaded', () => {
     playSound('success');
     startConfettiCelebration();
 
-    // Reset video to start
+    // Reset video and states
     bdayVideo.currentTime = 0;
+    document.getElementById('game-card').classList.remove('video-ended');
 
     // Highlights winning state on board
     puzzlePieces.forEach(p => {
@@ -639,7 +640,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   btnReplayPuzzle.addEventListener('click', () => {
     playSound('click');
-    document.getElementById('game-card').classList.remove('game-solved');
+    const gameCard = document.getElementById('game-card');
+    gameCard.classList.remove('game-solved');
+    gameCard.classList.remove('video-ended');
     pauseBirthdayVideo();
     initPuzzle();
   });
@@ -668,14 +671,21 @@ document.addEventListener('DOMContentLoaded', () => {
     stopConfettiCelebration();
   }
 
-  // Toggle play/pause by clicking on the video (only when solved)
+  // Toggle play/pause by clicking on the video (only when solved and not ended)
   bdayVideo.addEventListener('click', () => {
-    if (document.getElementById('game-card').classList.contains('game-solved')) {
+    const gameCard = document.getElementById('game-card');
+    if (gameCard.classList.contains('game-solved') && !gameCard.classList.contains('video-ended')) {
       if (bdayVideo.paused) {
         playBirthdayVideo();
       } else {
         pauseBirthdayVideo();
       }
     }
+  });
+
+  // Handle video ending: transition to duo.png image
+  bdayVideo.addEventListener('ended', () => {
+    document.getElementById('game-card').classList.add('video-ended');
+    stopConfettiCelebration();
   });
 });

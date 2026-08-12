@@ -11,7 +11,7 @@
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- Custom Stylesheet -->
-  <link rel="stylesheet" href="style_v2.css">
+  <link rel="stylesheet" href="style_v2.css?v=2.0.1">
 </head>
 <body>
 
@@ -93,7 +93,10 @@
         <div class="puzzle-board-wrapper">
           <div class="custom-player" id="custom-player">
             <!-- Video sits underneath the puzzle pieces -->
-            <video id="birthday-video" src="tawan.mp4" playsinline loop></video>
+            <video id="birthday-video" src="tawan.mp4" playsinline></video>
+            
+            <!-- Ending image sits on top of video, below puzzle board -->
+            <img id="ending-image" src="duo.png" alt="Duo Memory">
             
             <!-- Puzzle board sits absolute on top of the video -->
             <div id="puzzle-board" class="puzzle-board">
@@ -133,6 +136,6 @@
   <video id="hidden-video" src="tawan.mp4" style="display: none;" muted crossorigin="anonymous"></video>
 
   <!-- App logic script -->
-  <script src="app_v2.js"></script>
+  <script src="app_v2.js?v=2.0.1"></script>
 </body>
 </html>

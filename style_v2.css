@@ -498,6 +498,20 @@ body {
   display: block;
 }
 
+.custom-player img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.2s ease-in-out;
+}
+
 .puzzle-board {
   position: absolute;
   top: 0;
@@ -644,6 +658,12 @@ body {
 #game-card.game-solved #puzzle-board {
   opacity: 0;
   pointer-events: none;
+}
+
+/* Show ending image when video is finished */
+#game-card.video-ended #ending-image {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 /* Fade out header, controls and footer but preserve space to prevent layout shifting */
